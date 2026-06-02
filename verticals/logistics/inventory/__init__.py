@@ -1,0 +1,1 @@
+"""Logistics Inventory Agent package."""

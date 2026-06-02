@@ -1,0 +1,10 @@
+agent_id: "policy-drafting-1"
+name: "Policy Drafting Agent"
+tier: "tier_2"
+vertical: "legal"
+reasoning_mode: "plan_and_execute"
+ip_registry_check_enabled: true
+token_budget:
+  max_tokens_per_task: 15000
+guardrails:
+  mandatory_disclaimer: "MANDATORY DISCLAIMER: This AI-generated analysis is not legal advice and should not be relied upon as such. Always consult a qualified attorney."

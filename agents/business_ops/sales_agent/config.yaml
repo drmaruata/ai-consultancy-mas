@@ -1,0 +1,20 @@
+agent_id: "sales-agent-1"
+name: "Sales Agent"
+tier: "tier_1"
+vertical: "all"
+reasoning_mode: "plan_and_execute"
+token_budget:
+  max_tokens_per_task: 15000
+  hard_cap_pct: 1.0
+  overage_threshold_pct: 0.8
+guardrails:
+  require_kb_validity_check: false
+  blocked_output_patterns: ["discount > 20%", "guarantee", "free pilot"]
+  mandatory_disclaimer: "This proposal is subject to final pricing approval."
+  max_confidence_without_source: 0.8
+  pii_detection_enabled: true
+escalation_rules:
+  - reason: "agent_error"
+    description: "Lead is unqualified or score is too low."
+  - reason: "agent_error"
+    description: "Proposal generation failed"

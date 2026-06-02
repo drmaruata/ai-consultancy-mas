@@ -1,0 +1,1 @@
+"""EdTech Vertical Manager module."""

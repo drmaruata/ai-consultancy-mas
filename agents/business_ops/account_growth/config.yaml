@@ -1,0 +1,16 @@
+agent_id: account-growth-1
+name: Account Growth Agent
+tier: tier_1
+vertical: all
+reasoning_mode: plan_and_execute
+token_budget:
+  max_tokens_per_task: 15000
+  hard_cap_pct: 1.0
+  overage_threshold_pct: 0.8
+guardrails:
+  require_kb_validity_check: false
+  blocked_output_patterns: []
+  mandatory_disclaimer: ''
+  max_confidence_without_source: 0.9
+  pii_detection_enabled: true
+escalation_rules: []

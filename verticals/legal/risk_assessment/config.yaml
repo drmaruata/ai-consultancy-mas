@@ -1,0 +1,10 @@
+agent_id: "risk-assessment-1"
+name: "Risk Assessment Agent"
+tier: "tier_3"
+vertical: "legal"
+reasoning_mode: "react"
+ip_registry_check_enabled: true
+token_budget:
+  max_tokens_per_task: 25000
+guardrails:
+  mandatory_disclaimer: "MANDATORY DISCLAIMER: This AI-generated analysis is not legal advice and should not be relied upon as such. Always consult a qualified attorney."

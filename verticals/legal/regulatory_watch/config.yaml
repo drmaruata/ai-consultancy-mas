@@ -1,0 +1,18 @@
+agent_id: "regulatory-watch-legal-1"
+name: "Regulatory Watch Agent"
+tier: "tier_4"
+vertical: "legal"
+reasoning_mode: "react"
+ip_registry_check_enabled: false
+token_budget:
+  max_tokens_per_task: 12000
+  hard_cap_pct: 0.95
+  overage_threshold_pct: 0.80
+guardrails:
+  blocked_output_patterns:
+    - "I guarantee this complies"
+    - "100% legal"
+  mandatory_disclaimer: "This AI-generated analysis is not legal advice and should not be relied upon as such. Always consult a qualified attorney before taking any legal action."
+  require_kb_validity_check: true
+  pii_detection_enabled: false
+  max_confidence_without_source: 0.5

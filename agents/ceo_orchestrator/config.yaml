@@ -1,0 +1,18 @@
+agent_id: "ceo-orchestrator-1"
+name: "CEO Orchestrator"
+tier: "tier_0"
+vertical: "all"
+reasoning_mode: "plan_and_execute"
+token_budget:
+  max_tokens_per_task: 50000
+  hard_cap_pct: 1.0
+  overage_threshold_pct: 0.8
+guardrails:
+  require_kb_validity_check: false
+  blocked_output_patterns: []
+  mandatory_disclaimer: ""
+  max_confidence_without_source: 1.0
+  pii_detection_enabled: false
+escalation_rules:
+  - reason: "agent_error"
+    description: "Unresolved resource conflict"

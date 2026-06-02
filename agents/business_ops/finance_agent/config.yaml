@@ -1,0 +1,18 @@
+agent_id: "finance-agent-1"
+name: "Finance Agent"
+tier: "tier_1"
+vertical: "all"
+reasoning_mode: "plan_and_execute"
+token_budget:
+  max_tokens_per_task: 10000
+  hard_cap_pct: 1.0
+  overage_threshold_pct: 0.8
+guardrails:
+  require_kb_validity_check: false
+  blocked_output_patterns: []
+  mandatory_disclaimer: "Confidential Financial Document"
+  max_confidence_without_source: 1.0
+  pii_detection_enabled: true
+escalation_rules:
+  - reason: "pricing_anomaly"
+    description: "Computed price exceeds 2.5x base rate."
