@@ -1,0 +1,41 @@
+name: Test Doppler Sync
+
+on:
+  push:
+    branches:
+      - test-doppler-sync
+
+jobs:
+  test-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if Doppler secrets are synced
+        env:
+          REDPANDA_CLIENT_ID: ${{ secrets.REDPANDA_CLIENT_ID }}
+          UPSTASH_API_KEY: ${{ secrets.UPSTASH_API_KEY }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          echo "Testing presence of secrets synced from Doppler..."
+          
+          if [ -n "$REDPANDA_CLIENT_ID" ]; then
+            echo "✅ REDPANDA_CLIENT_ID is present!"
+          else
+            echo "❌ REDPANDA_CLIENT_ID is MISSING."
+            exit 1
+          fi
+          
+          if [ -n "$UPSTASH_API_KEY" ]; then
+            echo "✅ UPSTASH_API_KEY is present!"
+          else
+            echo "❌ UPSTASH_API_KEY is MISSING."
+            exit 1
+          fi
+
+          if [ -n "$SUPABASE_ACCESS_TOKEN" ]; then
+            echo "✅ SUPABASE_ACCESS_TOKEN is present!"
+          else
+            echo "❌ SUPABASE_ACCESS_TOKEN is MISSING."
+            exit 1
+          fi
+          
+          echo "🎉 All required secrets successfully synced from Doppler to GitHub Actions!"
