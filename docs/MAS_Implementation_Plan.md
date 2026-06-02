@@ -228,11 +228,11 @@ For DPDP-compliant Tier-1 Healthcare and Legal clients requiring zero external d
 
 | Interface | Stack | Users |
 |-----------|-------|-------|
-| Hospital Portal | Next.js 15 + Tailwind CSS | B2B Healthcare clients |
-| Ops Dashboard | Next.js 15 + Tailwind CSS | B2B Logistics clients |
-| Legal Workspace | Next.js 15 + Tailwind CSS | B2B Legal clients |
-| Learning Portal | Next.js 15 + Tailwind CSS | B2B EdTech clients |
-| Internal Oversight Console | React 18 | Founders / operators |
+| Hospital Portal | Next.js 15 + Tailwind CSS (v4) | B2B Healthcare clients |
+| Ops Dashboard | Next.js 15 + Tailwind CSS (v4) | B2B Logistics clients |
+| Legal Workspace | Next.js 15 + Tailwind CSS (v4) | B2B Legal clients |
+| Learning Portal | Next.js 15 + Tailwind CSS (v4) | B2B EdTech clients |
+| Internal Oversight Console | React 19 + Vite + Tailwind CSS (v4) | Founders / operators |
 | Aspirant App (B2C) | Flutter (latest stable) | Individual exam aspirants |
 
 ### 5.10 External Knowledge — Context7 MCP
@@ -307,32 +307,32 @@ Complete this checklist before any Phase 0 sprint work begins. These are one-tim
 
 ### Accounts & Access
 
-- [ ] Register and verify **Redpanda Cloud** account; provision first cluster (region: Mumbai `ap-south-1`)
-- [ ] Register and verify **Upstash** account; note: Upstash now offers Redis, Vector, QStash/Workflow — no Kafka
-- [ ] Register **Supabase** account; create project; note connection strings
-- [ ] Activate **Anthropic Claude API** — verify rate limits and tier
-- [ ] Activate **OpenAI API** — verify rate limits
-- [ ] Activate **Google Gemini API** — verify rate limits
-- [ ] Register **GitHub** organisation; create monorepo with structure: `/agents`, `/shared-services`, `/verticals`, `/interfaces`, `/infra`
-- [ ] Register secret management service (recommend **Doppler** for simplicity or **AWS SSM Parameter Store**)
+- [x] Register and verify **Redpanda Cloud** account; provision first cluster (region: Mumbai `ap-south-1`)
+- [x] Register and verify **Upstash** account; note: Upstash now offers Redis, Vector, QStash/Workflow — no Kafka
+- [x] Register **Supabase** account; create project; note connection strings
+- [x] Activate **Anthropic Claude API** — verify rate limits and tier
+- [x] Activate **OpenAI API** — verify rate limits
+- [x] Activate **Google Gemini API** — verify rate limits
+- [x] Register **GitHub** organisation; create monorepo with structure: `/agents`, `/shared-services`, `/verticals`, `/interfaces`, `/infra`
+- [x] Register secret management service (recommend **Doppler** for simplicity or **AWS SSM Parameter Store**)
 
 ### Infrastructure as Code
 
-- [ ] Set up **Terraform** (or Pulumi) workspace for infrastructure provisioning
-- [ ] Write IaC modules for: Redpanda cluster, Supabase project, Upstash resources (Redis, Vector, QStash)
-- [ ] Commit all IaC to `/infra` directory in monorepo; peer-review before apply
+- [x] Set up **Terraform** (or Pulumi) workspace for infrastructure provisioning
+- [x] Write IaC modules for: Redpanda cluster, Supabase project, Upstash resources (Redis, Vector, QStash)
+- [x] Commit all IaC to `/infra` directory in monorepo; peer-review before apply
 
 ### Environments
 
-- [ ] Create three named environments: `local`, `staging`, `production`
-- [ ] Configure GitHub Actions workflows for: `test` (on PR), `deploy-staging` (on merge to `main`), `deploy-production` (manual trigger with sign-off gate)
-- [ ] Confirm staging environment mirrors production config exactly (same services, sandbox API keys)
+- [x] Create three named environments: `local`, `staging`, `production`
+- [x] Configure GitHub Actions workflows for: `test` (on PR), `deploy-staging` (on merge to `main`), `deploy-production` (manual trigger with sign-off gate)
+- [x] Confirm staging environment mirrors production config exactly (same services, sandbox API keys)
 
 ### Developer Access
 
-- [ ] All team members have GitHub repo access with branch protection on `main`
-- [ ] All team members have read access to Redpanda staging cluster
-- [ ] API keys distributed via secret manager — never committed to Git
+- [x] All team members have GitHub repo access with branch protection on `main`
+- [x] All team members have read access to Redpanda staging cluster
+- [x] API keys distributed via secret manager — never committed to Git
 
 ---
 
@@ -591,7 +591,7 @@ agent_configs (id, agent_id, version, system_prompt, is_active, authored_by, cre
 **Owner:** Frontend Engineer
 **Location:** `/interfaces/oversight-console/`
 **Steps:**
-1. Initialise React 18 + TypeScript project
+1. Initialise React 19 + Vite + Tailwind CSS (v4) project
 2. Implement read-only views:
    - **Agent Status Board:** List of all agents with status (idle/running/error), last task time
    - **Task Log Feed:** Real-time feed from `tasks` table via Supabase realtime subscription

@@ -9,6 +9,7 @@ from agent_framework.base import (
     SuccessResult,
 )
 from agent_framework.context import AgentContext
+from agent_framework.config import AgentConfig
 from agent_framework.enums import EscalationReason
 from messaging.producer import MessageProducer
 from messaging.schemas import MASMessage
@@ -26,8 +27,8 @@ class TaskAssignedMessage(MASMessage):
 class CEOOrchestratorAgent(BaseAgent):
     """Layer 0 Agent: Coordinates execution across the entire MAS."""
 
-    def __init__(self, agent_id: str, producer: MessageProducer | None = None) -> None:
-        super().__init__(agent_id=agent_id)
+    def __init__(self, config: AgentConfig, producer: MessageProducer | None = None) -> None:
+        super().__init__(config=config)
         self._producer = producer
 
     async def plan(self, context: AgentContext) -> dict[str, Any]:
@@ -57,21 +58,31 @@ class CEOOrchestratorAgent(BaseAgent):
 
     async def route_task(self, context: AgentContext) -> AgentResult:
         """Route task and publish to task.assigned topic."""
-        # Stub logic for routing
-        target_agent = "healthcare-vertical-manager"
-        vertical = "healthcare"
+        payload = context.task.input_data or {}
+        vertical = payload.get("vertical")
+        
+        if vertical in ["healthcare", "logistics", "legal", "edtech"]:
+            target_agent = f"{vertical}-vertical-manager"
+        elif payload.get("target_agent"):
+            target_agent = payload["target_agent"]
+            vertical = payload.get("vertical", "business") # Default to business if no vertical specified
+        else:
+            return EscalationResult(
+                reason=EscalationReason.AGENT_ERROR,
+                description=f"Cannot route task: No vertical or target_agent specified in payload: {payload}"
+            )
         
         if self._producer:
             msg = TaskAssignedMessage(
                 source_agent_id=self.agent_id,
                 target_agent_id=target_agent,
-                task_id=context.task.id,
+                task_id=context.task.task_id,
                 vertical=vertical,
                 task_type="route_client_request"
             )
             try:
                 await self._producer.publish("task.assigned", msg)
-                self._log.info("task_routed", target=target_agent, task_id=context.task.id)
+                self._log.info("task_routed", target=target_agent, task_id=context.task.task_id)
             except Exception as e:
                 return EscalationResult(
                     reason=EscalationReason.SYSTEM_ERROR,
