@@ -39,10 +39,10 @@ def _build_admin_client() -> AdminClient:
                 "sasl.password": SASL_PASSWORD,
             }
         )
-        print("Using SASL/SCRAM-256 authentication.")
+        print("[auth] Using SASL/SCRAM-256 authentication.")
     else:
         print(
-            "WARNING: KAFKA_SASL_USERNAME / KAFKA_SASL_PASSWORD not set. "
+            "[warn] KAFKA_SASL_USERNAME / KAFKA_SASL_PASSWORD not set. "
             "Connecting without authentication (works only for local dev)."
         )
 
@@ -74,32 +74,44 @@ def main() -> None:
         NewTopic(
             t["name"],
             num_partitions=t["partitions"],
-            replication_factor=1,
+            replication_factor=3,
             config={"retention.ms": str(t["retention_days"] * 24 * 60 * 60 * 1_000)},
         )
         for t in TOPICS
     ]
 
     print(f"Provisioning {len(new_topics)} topics on {BOOTSTRAP_SERVERS} …")
+    print(f"Provisioning {len(new_topics)} topics on {BOOTSTRAP_SERVERS} ...")
     futures = admin.create_topics(new_topics, request_timeout=30)
 
     success = True
     for topic_name, future in futures.items():
         try:
             future.result()
-            print(f"  ✓  {topic_name}")
+            print(f"  [OK] {topic_name}")
         except KafkaException as exc:
-            if "already exists" in str(exc).lower():
-                print(f"  ⚠  {topic_name} — already exists (skipping)")
+            err_str = str(exc).lower()
+            if "already exists" in err_str:
+                print(f"  [SKIP] {topic_name} - already exists")
+            elif "authorization" in err_str or "auth" in err_str:
+                print(
+                    f"  [FAIL] {topic_name} - Authorization failed.\n"
+                    f"         Ensure the Redpanda user '{SASL_USERNAME}' has CREATE/DESCRIBE\n"
+                    f"         ACLs on topic '{topic_name}'. In Redpanda Cloud Console go to:\n"
+                    f"         Security -> ACLs -> Add ACL (Principal: {SASL_USERNAME}, \n"
+                    f"         Resource: topic:{topic_name}, Ops: All).\n"
+                    f"         Or grant a wildcard ACL on all topics for this service account."
+                )
+                success = False
             else:
-                print(f"  ✗  {topic_name} — FAILED: {exc}")
+                print(f"  [FAIL] {topic_name} - {exc}")
                 success = False
 
     if not success:
         print("\nOne or more topics failed to create. Check credentials and try again.")
         sys.exit(1)
 
-    print("\nKafka topic provisioning complete. ✓")
+    print("\nKafka topic provisioning complete. [OK]")
 
 
 if __name__ == "__main__":
